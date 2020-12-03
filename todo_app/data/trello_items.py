@@ -1,4 +1,4 @@
-from todo_item import Item
+from todo_app.data.todo_item import Item
 import requests
 from flask import current_app as app
 
@@ -43,6 +43,7 @@ def get_board(name):
     """
     boards = get_boards()
     return next((board for board in boards if board['name'] == name), None)
+
 
 
 def get_lists():
