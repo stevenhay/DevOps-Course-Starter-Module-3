@@ -34,6 +34,16 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 ## Running the App
 
+### Vagrant
+
+Start the application using vagrant by running:
+
+```bash
+$ vagrant up
+```
+
+### Poetry
+
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
 ```bash
 $ poetry run flask run
