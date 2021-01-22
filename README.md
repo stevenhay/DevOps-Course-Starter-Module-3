@@ -60,6 +60,8 @@ Or production (using gunicorn):
 $ docker run --env-file ./.env -p 5000:5000 todo-app:prod
 ```
 
+NOTE: if using docker, you may wish to remove the FLASK_ENV variable within the .env file as it will overwrite the ones within the docker file if left.
+
 ### Vagrant
 
 Start the application using vagrant by running:
