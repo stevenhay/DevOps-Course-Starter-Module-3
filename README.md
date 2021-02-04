@@ -39,7 +39,7 @@ The `.env` file is used by flask to set environment variables when running `flas
 To build the docker image for development:
 
 ```bash
-$ docker build --target dev --mount type=bind,source=./todo_app,target=/app/todo_app --tag todo-app:dev .
+$ docker build --target dev --tag todo-app:dev .
 ```
 
 Or production:
@@ -51,7 +51,7 @@ $ docker build --target prod --tag todo-app:prod .
 Start the application on port 5000 using docker for development:
 
 ```bash
-$ docker run --env-file ./.env.dev -p 5000:5000 todo-app:dev
+$ docker run --env-file ./.env.dev --mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app -p 5000:5000 todo-app:dev
 ```
 
 Or production (using gunicorn):
