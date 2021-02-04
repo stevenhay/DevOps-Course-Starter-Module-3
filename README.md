@@ -34,6 +34,34 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 ## Running the App
 
+### Docker
+
+To build the docker image for development:
+
+```bash
+$ docker build --target dev --tag todo-app:dev .
+```
+
+Or production:
+
+```bash
+$ docker build --target prod --tag todo-app:prod .
+```
+
+Start the application on port 5000 using docker for development:
+
+```bash
+$ docker run --env-file ./.env.dev --mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app -p 5000:5000 todo-app:dev
+```
+
+Or production (using gunicorn):
+
+```bash
+$ docker run --env-file ./.env -p 5000:5000 todo-app:prod
+```
+
+NOTE: if using docker, you may wish to remove the FLASK_ENV variable within the .env file as it will overwrite the ones within the docker file if left.
+
 ### Vagrant
 
 Start the application using vagrant by running:
