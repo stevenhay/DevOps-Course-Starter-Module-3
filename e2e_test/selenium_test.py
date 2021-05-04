@@ -31,10 +31,10 @@ def test_app():
 @pytest.fixture(scope="module")
 def driver():
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    # to reviewer: no matter where I added this damn driver it wouldn't work so I explicitly
-    # stated the location, sorry!
-    with webdriver.Chrome(executable_path="/mnt/d/chromedriver.exe", options=options) as driver:
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    with webdriver.Chrome(executable_path="./chromedriver", options=options) as driver:
         yield driver
 
 def test_task_journey(driver, test_app):
