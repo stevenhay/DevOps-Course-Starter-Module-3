@@ -25,3 +25,4 @@ RUN LATEST=`curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE
  curl -sSL https://chromedriver.storage.googleapis.com/${LATEST}/chromedriver_linux64.zip -o chromedriver_linux64.zip &&\
  apt-get install unzip -y &&\
  unzip ./chromedriver_linux64.zip
+ENTRYPOINT ["poetry", "run", "pytest"]
