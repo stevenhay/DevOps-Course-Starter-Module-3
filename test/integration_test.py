@@ -69,7 +69,7 @@ def mock_get_requests(monkeypatch):
             return MockListsResponse()
 
         raise RuntimeError("Requested url not mocked")
-    
+
     monkeypatch.setattr(requests, "get", mock_get)
 
 def test_index_page(mock_get_requests, client):
