@@ -1,54 +1,18 @@
+from todo_app.data.mongo_items import MongoDB
+from todo_app.data.todo_item import Item
 from todo_app.app import create_app
 from dotenv import find_dotenv, load_dotenv
+from dateutil.parser import isoparse
 import pytest
-import requests
+import pymongo
 
-class MockBoardsResponse:
-    @staticmethod
-    def json():
-        return  [
-            {
-                "name": "Test Board",
-                "id": "12345",
-                "url": "http://localhost/"
-            }
-        ]
-
-class MockListsResponse:
-    @staticmethod
-    def json():
-        return [
-            {
-                "name": "To Do",
-                "cards": [
-                    {
-                        "id": "1",
-                        "dateLastActivity": "2020-09-12T22:01:24.072Z",
-                        "name": "Card1"
-                    },
-                    {
-                        "id": "2",
-                        "dateLastActivity": "2020-09-12T22:01:24.072Z",
-                        "name": "Card2"
-                    }
-                ]
-            },
-            {
-                "name": "Done",
-                "cards": [
-                    {
-                        "id": "3",
-                        "dateLastActivity": "2020-09-12T22:01:24.072Z",
-                        "name": "Card3"
-                    },
-                    {
-                        "id": "4",
-                        "dateLastActivity": "2020-09-12T22:01:24.072Z",
-                        "name": "Card4"
-                    }
-                ]
-            }
-        ]
+def data(self):
+    return [
+            Item("1", "Card 1", isoparse("2020-09-12T22:01:24.072Z"), "To Do"),
+            Item("2", "Card 2", isoparse("2020-09-12T22:01:24.072Z"), "To Do"),
+            Item("3", "Card 3", isoparse("2020-09-12T22:01:24.072Z"), "Doing"),
+            Item("4", "Card 4", isoparse("2020-09-12T22:01:24.072Z"), "Doing"),
+    ]
 
 @pytest.fixture
 def client():
@@ -59,24 +23,15 @@ def client():
     with test_app.test_client() as client:
         yield client
 
-@pytest.fixture
-def mock_get_requests(monkeypatch):
-    def mock_get(*args, **kwargs):
-        url = args[0]
-        if url.endswith("/boards"):
-           return MockBoardsResponse()
-        elif url.endswith("/lists"):
-            return MockListsResponse()
 
-        raise RuntimeError("Requested url not mocked")
+def test_index_page(monkeypatch, client):
+    monkeypatch.setattr(pymongo, 'MongoClient', lambda _: None)
+    monkeypatch.setattr(MongoDB, 'get_items', data)
 
-    monkeypatch.setattr(requests, "get", mock_get)
-
-def test_index_page(mock_get_requests, client):
     response = client.get('/')
     print (response)
 
-    assert b'<h5 class="mb-1">Card1</h5>' in response.data
-    assert b'<h5 class="mb-1">Card2</h5>' in response.data
-    assert b'<h5 class="mb-1">Card3</h5>' in response.data
-    assert b'<h5 class="mb-1">Card4</h5>' in response.data
+    assert b'<h5 class="mb-1">Card 1</h5>' in response.data
+    assert b'<h5 class="mb-1">Card 2</h5>' in response.data
+    assert b'<h5 class="mb-1">Card 3</h5>' in response.data
+    assert b'<h5 class="mb-1">Card 4</h5>' in response.data
