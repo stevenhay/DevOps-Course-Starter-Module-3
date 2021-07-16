@@ -18,6 +18,7 @@ RUN pip install poetry && poetry install --no-root --no-dev
 
 FROM base as test
 ENV FLASK_ENV=test
+RUN pip install poetry && poetry install --no-root
 RUN apt-get update
 RUN curl -sSL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o chrome.deb && apt-get install ./chrome.deb -y && rm ./chrome.deb
 RUN LATEST=`curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE` &&\
