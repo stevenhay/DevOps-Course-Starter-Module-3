@@ -12,9 +12,16 @@ class MockDate(datetime.date):
 
 
 def mkitem(status, id='id', name='name', last_modified='2020-08-24T20:45:04.888Z'):
-    return Item(id, name, last_modified, status)
+    return Item(id, name, isoparse(last_modified), status)
 
-model = ViewModel([mkitem(status='To Do'), mkitem(status='To Do'), mkitem(status='Doing'), mkitem(status='Doing'), mkitem(status='Done'), mkitem(status='Done')])
+model = ViewModel([
+    mkitem(status='To Do'),
+    mkitem(status='To Do'), 
+    mkitem(status='Doing'), 
+    mkitem(status='Doing'), 
+    mkitem(status='Done'), 
+    mkitem(status='Done')
+])
 
 def test_items_property():
     assert len(model.items) == 6

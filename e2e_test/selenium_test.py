@@ -1,19 +1,19 @@
 from threading import Thread
+from todo_app.data.mongo_items import MongoDB
 from dotenv import find_dotenv, load_dotenv
 from todo_app import app
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import pytest
 import os
-import requests
 
 @pytest.fixture(scope='module')
 def test_app():
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
 
-    board = create_board('test board')
-    os.environ['TRELLO_BOARD_ID'] = board['id']
+    db = MongoDB()
+    os.environ['MONGO_DATABASE'] = 'E2E'
 
     # construct the new application
     application = app.create_app()
@@ -26,7 +26,7 @@ def test_app():
 
     # Tear Down
     thread.join(1)
-    delete_board(board['id'])
+    db.client.drop_database(os.getenv('MONGO_DATABASE'))
 
 @pytest.fixture(scope="module")
 def driver():
@@ -63,31 +63,3 @@ def test_task_journey(driver, test_app):
     except NoSuchElementException:
         pytest.fail('NoSuchElement')
 
-def get_auth_params():
-    return { 'key': os.environ.get('TRELLO_API_KEY'), 'token': os.environ.get('TRELLO_API_SECRET') }
-
-def build_url(endpoint):
-    return 'https://api.trello.com/1' + endpoint
-
-def build_params(params = {}):
-    full_params = get_auth_params()
-    full_params.update(params)
-    return full_params
-    
-def create_board(name):
-    params = build_params({'name': name})
-    url = build_url('/boards')
-
-    response = requests.post(url, params = params)
-    board = response.json()
-
-    return board
-
-def delete_board(id):
-    params = build_params()
-    url = build_url('/boards/%s' % id)
-
-    response = requests.delete(url, params = params)
-    board = response.json()
-
-    return board
