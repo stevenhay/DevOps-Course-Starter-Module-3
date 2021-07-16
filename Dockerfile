@@ -5,16 +5,16 @@ EXPOSE 5000
 WORKDIR /app/
 COPY . .
 
-RUN pip install poetry && poetry install --no-root --no-dev
-
 ENTRYPOINT ["/bin/bash", "-c", "./start.sh"]
 
 # simply set env
 FROM base as dev
 ENV FLASK_ENV=development
+RUN pip install poetry && poetry install --no-root
 
 FROM base as prod
 ENV FLASK_ENV=production
+RUN pip install poetry && poetry install --no-root --no-dev
 
 FROM base as test
 ENV FLASK_ENV=test

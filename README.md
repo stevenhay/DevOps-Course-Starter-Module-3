@@ -36,6 +36,14 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 ### Docker
 
+To run the tests:
+
+```bash
+$ docker build --target test --tag todo-app:test .
+$ docker run todo-app:test test
+$ docker run -e TRELLO_API_KEY -e TRELLO_API_SECRET todo-app:test e2e_test
+```
+
 To build the docker image for development:
 
 ```bash
