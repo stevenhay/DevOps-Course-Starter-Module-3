@@ -4,7 +4,7 @@ services:
 stages:
   - test
   - name: deploy
-    if: branch = main
+    if: (branch = main) AND (NOT (type = pull_request))
 
 jobs:
   include:
