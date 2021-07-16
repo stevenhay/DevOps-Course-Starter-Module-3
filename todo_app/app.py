@@ -5,8 +5,6 @@ from todo_app.model.view_model import ViewModel
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('todo_app.flask_config.Config')
-
     db = MongoDB()
 
     @app.route('/')
